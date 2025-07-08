@@ -1,6 +1,7 @@
 import { IsMobile } from '$lib/hooks/is-mobile.svelte.js';
 import { getContext, setContext } from 'svelte';
 import { SIDEBAR_KEYBOARD_SHORTCUT } from './constants.js';
+import { browser } from '$app/environment';
 
 type Getter<T> = () => T;
 
@@ -37,11 +38,13 @@ class SidebarState {
 	// Convenience getter for checking if the sidebar is mobile
 	// without this, we would need to use `sidebar.isMobile.current` everywhere
 	get isMobile() {
+		if (!browser) return false;
 		return this.#isMobile.current;
 	}
 
 	// Event handler to apply to the `<svelte:window>`
 	handleShortcutKeydown = (e: KeyboardEvent) => {
+		if (!browser) return;
 		if (e.key === SIDEBAR_KEYBOARD_SHORTCUT && (e.metaKey || e.ctrlKey)) {
 			e.preventDefault();
 			this.toggle();
@@ -53,6 +56,7 @@ class SidebarState {
 	};
 
 	toggle = () => {
+		if (!browser) return;
 		return this.#isMobile.current ? (this.openMobile = !this.openMobile) : this.setOpen(!this.open);
 	};
 }
@@ -75,5 +79,18 @@ export function setSidebar(props: SidebarStateProps): SidebarState {
  * @returns The `SidebarState` instance.
  */
 export function useSidebar(): SidebarState {
+	if (!browser) {
+		// Return a mock instance for SSR
+		return {
+			open: false,
+			openMobile: false,
+			state: 'collapsed',
+			isMobile: false,
+			setOpen: () => {},
+			setOpenMobile: () => {},
+			toggle: () => {},
+			handleShortcutKeydown: () => {}
+		} as any;
+	}
 	return getContext(Symbol.for(SYMBOL_KEY));
 }

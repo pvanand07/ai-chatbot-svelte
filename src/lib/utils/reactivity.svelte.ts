@@ -1,4 +1,5 @@
 import { getContext, setContext } from 'svelte';
+import { browser } from '$app/environment';
 
 export class Box<T> {
 	value = $state<T>() as T;
@@ -19,7 +20,7 @@ export class SynchronizedCookie {
 	constructor(key: string, value: string) {
 		this.#key = key;
 		// In CSR, get initial value from localStorage if available
-		if (typeof window !== 'undefined') {
+		if (browser) {
 			const stored = localStorage.getItem(key);
 			this.#value = stored || value;
 		} else {
@@ -38,17 +39,17 @@ export class SynchronizedCookie {
 
 	set value(v: string) {
 		// Store in localStorage for CSR
-		if (typeof window !== 'undefined') {
+		if (browser) {
 			localStorage.setItem(this.#key, v);
+			// Also sync with server for persistence across sessions
+			fetch(`/api/synchronized-cookie/${this.#key}`, {
+				method: 'POST',
+				body: JSON.stringify({ value: v }),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).catch(console.error);
 		}
-		// Also sync with server for persistence across sessions
-		fetch(`/api/synchronized-cookie/${this.#key}`, {
-			method: 'POST',
-			body: JSON.stringify({ value: v }),
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		}).catch(console.error);
 		this.#value = v;
 	}
 
@@ -57,6 +58,10 @@ export class SynchronizedCookie {
 	}
 
 	static fromContext(key: string): SynchronizedCookie {
+		if (!browser) {
+			// Return a default instance for SSR
+			return new SynchronizedCookie(key, '');
+		}
 		return getContext(Symbol.for(`SynchronizedCookie:${key}`));
 	}
 }

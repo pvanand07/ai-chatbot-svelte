@@ -7,6 +7,7 @@
 	import { LocalStorage } from '$lib/hooks/local-storage.svelte';
 	import { innerWidth } from 'svelte/reactivity/window';
 	import type { Attachment } from 'ai';
+	import { browser } from '$app/environment';
 	import { toast } from 'svelte-sonner';
 	import { Button } from './ui/button';
 	import PaperclipIcon from './icons/paperclip.svelte';
@@ -128,7 +129,9 @@
 	});
 
 	$effect.pre(() => {
-		storedInput.value = chatClient.input;
+		if (browser) {
+			storedInput.value = chatClient.input;
+		}
 	});
 </script>
 

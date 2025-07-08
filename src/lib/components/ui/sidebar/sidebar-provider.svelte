@@ -2,6 +2,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { cn, type WithElementRef } from '$lib/utils/shadcn.js';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import { browser } from '$app/environment';
 	import {
 		SIDEBAR_COOKIE_MAX_AGE,
 		SIDEBAR_COOKIE_NAME,
@@ -29,8 +30,10 @@
 			open = value;
 			onOpenChange(value);
 
-			// This sets the cookie to keep the sidebar state.
-			document.cookie = `${SIDEBAR_COOKIE_NAME}=${open}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+			// This sets the cookie to keep the sidebar state (only on client-side)
+			if (browser) {
+				document.cookie = `${SIDEBAR_COOKIE_NAME}=${open}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+			}
 		}
 	});
 </script>

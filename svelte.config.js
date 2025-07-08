@@ -9,10 +9,12 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
-		// Configure for SPA mode
+		// Configure for full CSR/SPA mode
 		prerender: {
 			entries: []
-		}
+		},
+		csr: true,
+		ssr: false
 	}
 };
 

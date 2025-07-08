@@ -4,6 +4,13 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			// Prevent FOUC (Flash of Unstyled Content) in CSR mode
+			if (localStorage.getItem('theme') === 'dark' || 
+				(!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+				document.documentElement.classList.add('dark');
+			}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body class="antialiased" data-sveltekit-preload-data="hover">

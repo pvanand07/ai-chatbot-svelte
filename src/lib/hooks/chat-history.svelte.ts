@@ -2,6 +2,7 @@ import type { VisibilityType } from '$lib/components/visibility-selector.svelte'
 import type { Chat } from '$lib/server/db/schema';
 import { getContext, setContext } from 'svelte';
 import { toast } from 'svelte-sonner';
+import { browser } from '$app/environment';
 
 const contextKey = Symbol('ChatHistory');
 
@@ -69,6 +70,10 @@ export class ChatHistory {
 	}
 
 	static fromContext(): ChatHistory {
+		if (!browser) {
+			// Return a default instance for SSR
+			return new ChatHistory(Promise.resolve([]));
+		}
 		return getContext(contextKey);
 	}
 }

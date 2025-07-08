@@ -11,9 +11,16 @@
 	} from './ui/dropdown-menu';
 	import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from './ui/sidebar';
 	import { getTheme } from '@sejohnson/svelte-themes';
+	import { browser } from '$app/environment';
 
 	let { user }: { user: User } = $props();
 	const theme = getTheme();
+
+	function handleSignOut() {
+		if (browser) {
+			window.location.href = '/signout';
+		}
+	}
 </script>
 
 <SidebarMenu>
@@ -50,12 +57,11 @@
 					{#snippet child({ props })}
 						<button
 							{...props}
-							onclick={() => window.location.href = '/signout'}
+							onclick={handleSignOut}
 							class={cn('w-full cursor-pointer', props.class as string)}
 						>
 							Sign out
 						</button>
-						>
 					{/snippet}
 				</DropdownMenuItem>
 			</DropdownMenuContent>
