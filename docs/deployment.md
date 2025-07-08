@@ -32,6 +32,7 @@ vercel env add POSTGRES_URL
 vercel env add XAI_API_KEY  
 vercel env add GROQ_API_KEY
 vercel env add PUBLIC_ALLOW_ANONYMOUS_CHATS
+vercel env add BLOB_READ_WRITE_TOKEN
 ```
 
 Or via Vercel Dashboard:

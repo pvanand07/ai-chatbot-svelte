@@ -8,13 +8,13 @@ const groq = createGroq({ apiKey: GROQ_API_KEY });
 
 export const myProvider = customProvider({
 	languageModels: {
-		'chat-model': xai('grok-2-1212'),
+		'chat-model': groq('llama-3.3-70b-versatile'),
 		'chat-model-reasoning': wrapLanguageModel({
 			model: groq('deepseek-r1-distill-llama-70b'),
 			middleware: extractReasoningMiddleware({ tagName: 'think' })
 		}),
-		'title-model': xai('grok-2-1212'),
-		'artifact-model': xai('grok-2-1212')
+		'title-model': groq('llama-3.1-8b-instant'),
+		'artifact-model': groq('llama-3.3-70b-versatile')
 	},
 	imageModels: {
 		'small-model': xai.image('grok-2-image')

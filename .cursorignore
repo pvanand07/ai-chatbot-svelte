@@ -1,0 +1,8 @@
+node_modules
+.vscode
+.svelte-kit
+.github
+src/lib/components/ui
+src/lib/components/icons
+
+
