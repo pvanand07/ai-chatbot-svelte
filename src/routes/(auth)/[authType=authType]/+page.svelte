@@ -1,11 +1,44 @@
 <script lang="ts">
-	import AuthForm from '$lib/components/auth-form.svelte';
-	import SubmitButton from '$lib/components/submit-button.svelte';
+	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
 	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
 
-	let { form } = $props();
+	let email = $state('');
+	let password = $state('');
+	let loading = $state(false);
 
 	const signInSignUp = $derived(page.params.authType === 'signup' ? 'Sign up' : 'Sign in');
+
+	async function handleSubmit(event: Event) {
+		event.preventDefault();
+		loading = true;
+
+		try {
+			const response = await fetch(`/api/auth/${page.params.authType}`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ email, password })
+			});
+
+			const result = await response.json();
+
+			if (response.ok) {
+				toast.success(`Successfully ${page.params.authType === 'signup' ? 'signed up' : 'signed in'}!`);
+				goto('/');
+			} else {
+				toast.error(result.message || 'Authentication failed');
+			}
+		} catch (error) {
+			toast.error('Network error. Please try again.');
+		} finally {
+			loading = false;
+		}
+	}
 </script>
 
 <div
@@ -18,10 +51,41 @@
 				Use your email and password to {signInSignUp.toLowerCase()}
 			</p>
 		</div>
-		<AuthForm form={form ?? undefined}>
-			{#snippet submitButton({ pending, success })}
-				<SubmitButton {pending} {success}>{signInSignUp}</SubmitButton>
-			{/snippet}
+		
+		<form onsubmit={handleSubmit} class="flex flex-col gap-4 px-4 sm:px-16">
+			<div class="flex flex-col gap-2">
+				<Label for="email" class="text-zinc-600 dark:text-zinc-400">Email Address</Label>
+				<Input
+					id="email"
+					name="email"
+					class="text-md bg-muted md:text-sm"
+					type="email"
+					placeholder="user@acme.com"
+					autocomplete="email"
+					required
+					autofocus
+					bind:value={email}
+				/>
+			</div>
+
+			<div class="flex flex-col gap-2">
+				<Label for="password" class="text-zinc-600 dark:text-zinc-400">Password</Label>
+				<Input
+					id="password"
+					name="password"
+					class="text-md bg-muted md:text-sm"
+					type="password"
+					required
+					bind:value={password}
+				/>
+			</div>
+
+			<Button type="submit" disabled={loading} class="relative">
+				{signInSignUp}
+				{#if loading}
+					<span class="absolute right-4">Loading...</span>
+				{/if}
+			</Button>
 
 			{#if page.params.authType === 'signup'}
 				{@render switchAuthType({
@@ -38,7 +102,7 @@
 					postscript: ' for free.'
 				})}
 			{/if}
-		</AuthForm>
+		</form>
 	</div>
 </div>
 

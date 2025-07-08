@@ -48,12 +48,13 @@
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>
 					{#snippet child({ props })}
-						<a
+						<button
 							{...props}
-							href="/signout"
+							onclick={() => window.location.href = '/signout'}
 							class={cn('w-full cursor-pointer', props.class as string)}
-							data-sveltekit-preload-data="false"
-							data-sveltekit-reload>Sign out</a
+						>
+							Sign out
+						</button>
 						>
 					{/snippet}
 				</DropdownMenuItem>

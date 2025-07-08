@@ -9,9 +9,7 @@ export class Box<T> {
 }
 
 /**
- * Expects there to be a route at `/api/synchronized-cookie/:key` that sets a cookie with the given key/value.
- * That handler is responsible for validating the cookie value and setting the cookie with the given key.
- * This uses fire-and-forget logic for setting the cookie, optimistically updating local state.
+ * For CSR, we use localStorage instead of synchronized cookies
  */
 export class SynchronizedCookie {
 	#contextKey: symbol;
@@ -20,7 +18,13 @@ export class SynchronizedCookie {
 
 	constructor(key: string, value: string) {
 		this.#key = key;
-		this.#value = value;
+		// In CSR, get initial value from localStorage if available
+		if (typeof window !== 'undefined') {
+			const stored = localStorage.getItem(key);
+			this.#value = stored || value;
+		} else {
+			this.#value = value;
+		}
 		this.#contextKey = Symbol.for(`SynchronizedCookie:${key}`);
 	}
 
@@ -33,6 +37,11 @@ export class SynchronizedCookie {
 	}
 
 	set value(v: string) {
+		// Store in localStorage for CSR
+		if (typeof window !== 'undefined') {
+			localStorage.setItem(this.#key, v);
+		}
+		// Also sync with server for persistence across sessions
 		fetch(`/api/synchronized-cookie/${this.#key}`, {
 			method: 'POST',
 			body: JSON.stringify({ value: v }),

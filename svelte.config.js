@@ -8,7 +8,11 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		// Configure for SPA mode
+		prerender: {
+			entries: []
+		}
 	}
 };
 
