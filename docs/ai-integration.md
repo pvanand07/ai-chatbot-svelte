@@ -8,18 +8,18 @@ The application integrates with multiple AI providers through the **AI SDK by Ve
 
 ```mermaid
 graph LR
-    Client[Client Chat] --> AISDK[AI SDK]
-    AISDK --> Provider[Custom Provider]
-    Provider --> XAI[xAI Grok]
-    Provider --> Groq[Groq DeepSeek]
-    Provider --> Middleware[Reasoning Middleware]
+    Client["Client Chat"] --> AISDK["AI SDK"]
+    AISDK --> Provider["Custom Provider"]
+    Provider --> XAI["xAI Grok"]
+    Provider --> Groq["Groq DeepSeek"]
+    Provider --> Middleware["Reasoning Middleware"]
     
     subgraph "Model Types"
-        Chat[Chat Model]
-        Reasoning[Reasoning Model]
-        Title[Title Generation]
-        Artifact[Artifact Model]
-        Image[Image Model]
+        Chat["Chat Model"]
+        Reasoning["Reasoning Model"]
+        Title["Title Generation"]
+        Artifact["Artifact Model"]
+        Image["Image Model"]
     end
     
     XAI --> Chat

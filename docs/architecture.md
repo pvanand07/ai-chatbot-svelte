@@ -6,11 +6,11 @@
 graph TB
     %% User Interface Layer
     subgraph "Frontend (SvelteKit)"
-        UI[User Interface]
-        Chat[Chat Component]
-        Sidebar[Sidebar Navigation]
-        Auth[Auth Forms]
-        MultiInput[Multimodal Input]
+        UI["User Interface"]
+        Chat["Chat Component"]
+        Sidebar["Sidebar Navigation"]
+        Auth["Auth Forms"]
+        MultiInput["Multimodal Input"]
     end
 
     %% Application Layer
@@ -18,7 +18,7 @@ graph TB
         ChatRoutes["/chat Routes"]
         AuthRoutes["/auth Routes"]
         APIRoutes["/api Routes"]
-        Layout[Layout Components]
+        Layout["Layout Components"]
     end
 
     %% API Layer
@@ -32,33 +32,33 @@ graph TB
 
     %% Business Logic Layer
     subgraph "Server Logic"
-        AIService[AI Service]
-        AuthService[Auth Service]
-        DBQueries[Database Queries]
-        SessionMgmt[Session Management]
+        AIService["AI Service"]
+        AuthService["Auth Service"]
+        DBQueries["Database Queries"]
+        SessionMgmt["Session Management"]
     end
 
     %% AI Integration
     subgraph "AI Providers"
-        XAI[xAI (Grok)]
-        Groq[Groq (Reasoning)]
-        AISDK[AI SDK]
+        XAI["xAI - Grok"]
+        Groq["Groq - Reasoning"]
+        AISDK["AI SDK"]
     end
 
     %% Data Layer
     subgraph "Database (PostgreSQL)"
-        Users[Users Table]
-        Sessions[Sessions Table]
-        Chats[Chats Table]
-        Messages[Messages Table]
-        Votes[Votes Table]
-        Documents[Documents Table]
+        Users["Users Table"]
+        Sessions["Sessions Table"]
+        Chats["Chats Table"]
+        Messages["Messages Table"]
+        Votes["Votes Table"]
+        Documents["Documents Table"]
     end
 
     %% External Storage
     subgraph "External Services"
-        VercelBlob[Vercel Blob Storage]
-        VercelPostgres[Vercel Postgres]
+        VercelBlob["Vercel Blob Storage"]
+        VercelPostgres["Vercel Postgres"]
     end
 
     %% Connections
